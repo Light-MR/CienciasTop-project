@@ -1,0 +1,79 @@
+{% extends "ver_sin_buscar_plantilla.html" %}
+{% load static %}
+
+{% block titulo %}Detalles del Producto{% endblock %}
+{% block nombre %}Renta de Producto{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-center">
+        <div class="detalle-producto" style="max-width: 900px; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: white;">
+            <div class="row">
+                <div class="col-md-5 text-center">
+                    <div class="imagen-producto">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid rounded" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="Imagen no disponible" class="img-fluid rounded" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="informacion-producto">
+                        <h2>{{ producto.nombre }}</h2>
+                        <p class="text-muted">Código: {{ producto.codigo }}</p>
+                        <hr>
+                        <p><strong>{{ producto.pumapuntos }} PUMA PUNTOS</strong></p>
+                        <p>{{ producto.existencia }} Disponibles</p>
+                        <p>{{ producto.dias_renta }} días de renta</p>
+                        <p>{{ producto.descripcion }}</p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg">Confirmar Renta</button>
+                        </form>
+                        <button onclick="cancelarRenta()" class="btn btn-secondary btn-lg mt-2">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<!-- Modal de Mensajes -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="redirectToInicio()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function cancelarRenta() {
+        window.location.href = "{% url 'inicio' %}";
+    }
+
+    function redirectToInicio() {
+        window.location.href = "{% url 'inicio' %}";
+    }
+
+    // Script para mostrar el modal automáticamente cuando hay mensajes
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if messages %}
+        var mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+        mensajeModal.show();
+        {% endif %}
+    });
+</script>
+{% endblock %}

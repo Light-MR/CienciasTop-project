@@ -1,0 +1,116 @@
+{% extends 'ver_sin_buscar_plantilla.html' %}
+{% load static %}
+
+{% block titulo %}
+Perfil de {{ usuario.n }}
+{% endblock %}
+
+{% block nombre %}
+Perfil de {{ usuario.numero_cuenta }}
+{% endblock %}
+
+{% block contenido %}
+<div class="perfil-usuario">
+    <div class="foto-perfil">
+        <div class="foto-perfil-icono">
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </div>
+
+    <div class="card-header">
+        <h2>{{ usuario.apellido_paterno }} {{ usuario.apellido_materno }} {{ usuario.nombre }}</h2>
+        <p>
+            <strong>
+                {% if usuario.get_tipo_usuario_display == 'Estudiante' %}
+                    Número de cuenta:
+                {% else %}
+                    Número de trabajador:
+                {% endif %}
+            </strong> 
+        </p>
+        <p> {{ usuario.numero_cuenta }}</p>
+    </div>
+
+    <div class="info-personal">
+        <h3>Información Personal</h3>
+        <ul>
+            <li><strong>Nombre:</strong> {{ usuario.nombre }}</li>
+            <li><strong>Apellidos:</strong> {{ usuario.apellido_paterno }} {{ usuario.apellido_materno }}</li>
+            <li><strong>Correo electrónico:</strong> {{ usuario.correo }}</li>
+            <li><strong>Celular:</strong> {{ usuario.celular }}</li>
+            <li><strong>Carrera:</strong> {{ usuario.get_carrera_display }}</li>
+            <li><strong>Rol:</strong> {{ rol }}</li>
+            {% if puma_puntos_totales is not None and usuario.get_rol_display == 'Usuario' %}
+                <li><strong>Puma Puntos totales:</strong> {{ puma_puntos_totales }}</li>
+                <li><strong>Puma Puntos acumulados este mes:</strong> {{ puma_puntos_mes }}</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+
+<!-- Productos Rentados -->
+{% if puede_rentar and usuario.get_rol_display == 'Usuario' %}
+<div class="productos-rentados">
+    <h3>Productos Rentados y Pendientes de Devolución</h3>
+    {% if rentas_rentadas %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID Renta</th>
+                    <th>Producto</th>
+                    <th>Fecha de Renta</th>
+                    <th>Fecha de Devolución Estimada</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for renta in rentas_rentadas %}
+                <tr>
+                    <td>{{ renta.id_renta }}</td>
+                    <td>{{ renta.producto.nombre }}</td>
+                    <td>{{ renta.fecha_renta }}</td>
+                    <td>{{ renta.fecha_devolucion_estimada }}</td>
+                    <td>{{ renta.get_estado_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes productos rentados actualmente.</p>
+    {% endif %}
+</div>
+
+<!-- Productos Devueltos -->
+<div class="productos-devueltos">
+    <h3>Productos Devueltos</h3>
+    {% if rentas_devueltas %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID Renta</th>
+                    <th>Producto</th>
+                    <th>Fecha de Renta</th>
+                    <th>Fecha de Devolución</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for renta in rentas_devueltas %}
+                <tr>
+                    <td>{{ renta.id_renta }}</td>
+                    <td>{{ renta.producto.nombre }}</td>
+                    <td>{{ renta.fecha_renta }}</td>
+                    <td>{{ renta.fecha_devolucion }}</td>
+                    <td>{{ renta.get_estado_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No has devuelto ningún producto.</p>
+    {% endif %}
+</div>
+{% endif %}
+</div>
+{% endblock %}

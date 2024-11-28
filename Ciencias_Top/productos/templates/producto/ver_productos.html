@@ -1,0 +1,164 @@
+{% load static %}
+
+<div class="productos-lista">
+    {% for producto in productos %}
+    <div class="card producto-card">
+        <div class="card-header">
+            <div class="icono-item">
+                <span class="material-icons">shopping_bag</span>
+            </div>
+            <div class="info-header">
+                <h4>{{ producto.nombre }}</h4>
+                <p>Código: {{ producto.codigo }}</p>
+            </div>
+            
+        </div>
+        <div class="card-image">
+            {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Imagen no disponible">
+            {% endif %}
+        </div>
+        <div class="card-content">
+            <p><strong>{{ producto.pumapuntos }} PUMA PUNTOS</strong></p>
+            <p>{{ producto.existencia }} Disponibles</p>
+            <p>{{ producto.dias_renta }} días de renta</p>
+            <p>{{ producto.descripcion }}</p>
+        </div>
+        <div class="card-actions">
+            {% if perms.usuarios.eliminar_producto or perms.usuarios.editar_producto %}
+                {% if perms.usuarios.eliminar_producto %}
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
+                    onclick="setDeleteUrl('{% url 'eliminar_producto' producto.codigo %}')">Eliminar</button>
+                {% endif %}
+                
+                {% if perms.usuarios.editar_producto %}
+                    <button class="btn btn-danger" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#editarProductoModal" 
+                    onclick="setEditProductData(
+                        '{{ producto.codigo }}', 
+                        '{{ producto.nombre|escapejs }}', 
+                        '{{ producto.descripcion|escapejs }}', 
+                        {{ producto.existencia }}, 
+                        {{ producto.pumapuntos }}, 
+                        {{ producto.dias_renta }}, 
+                        '{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}'
+                    )">Editar</button>
+                {% endif %}
+            {% else %}
+                {% if producto.existencia > 0 %}
+                    <a href="{% url 'rentas:renta_producto' producto.codigo %}" class="btn btn-success">Rentar</a>
+                {% else %}
+                    <button class="btn btn-secondary" disabled>Agotado</button>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!--Modal para liberar un ventana de confimacion-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered custom-modal-size">
+        <div class="modal-content">
+      
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este producto?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="POST" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered custom-modal-size">
+        <div class="modal-content">
+
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <form method="POST" enctype="multipart/form-data" id="editarProductoForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" id="producto-nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción:</label>
+                        <textarea rows="3" name="descripcion" id="producto-descripcion" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad de productos:</label>
+                        <input type="number" name="existencia" id="producto-existencia" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de puntos:</label>
+                        <input type="number" name="pumapuntos" id="producto-pumapuntos" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Días de uso:</label>
+                        <input type="number" name="dias_renta" id="producto-dias-renta" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen del producto:</label>
+                        <input type="file" name="imagen" accept="image/*" id="actual-input" class="hidden-input" style="display: none;">
+                        <button type="button" class="btn btn-upload" id="custom-button">Examinar archivos</button>
+                        <div id="image-preview-container" style="display:none; margin-top: 10px;">
+                            <img id="image-preview" src="" alt="Vista previa" 
+                                 style="max-width: 200px; max-height: 200px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+                        </div>
+                        <span id="file-chosen">No se ha seleccionado ningún archivo</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<!-- Modal de Mensajes -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            
+            <div class="modal-body">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block scripts %}
+<script src="{% static 'js/funciones_productos.js' %}"></script>
+<script>
+    // Script para mostrar el modal automáticamente cuando hay mensajes
+    document.addEventListener('DOMContentLoaded', function() {
+    {% if messages %}
+        var mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+        mensajeModal.show();
+    {% endif %}
+});
+</script>
+{% endblock %}
+
+

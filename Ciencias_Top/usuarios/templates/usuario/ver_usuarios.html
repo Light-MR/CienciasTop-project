@@ -1,0 +1,64 @@
+{% extends "verbuscar_plantilla.html" %}
+{% load static %}
+{% block titulo %} Usuarios {% endblock %}
+{% block nombre %} Usuarios {% endblock %}
+
+
+{% block buscar %}Buscar usuario (número de cuenta/nombre/correo/carrera/tipo de usuario/rol){% endblock %}
+
+
+
+
+{% block lista_items%}
+
+
+<!-- Mostrar el mensaje si no hay resultados de búsqueda o si no hay usuarios registrados -->
+{% if messages %}
+    <!-- Modal de Mensajes -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            
+            <div class="modal-body">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="usuarios-lista">
+
+    {% for usuario in usuarios %}
+
+        {% include 'usuario/ver_usuario.html' %}
+    {% endfor %}
+</div>
+
+
+
+
+
+{% endblock%}
+
+
+{% block scripts %}
+<script>
+    // Script para mostrar el modal automáticamente cuando hay mensajes
+    document.addEventListener('DOMContentLoaded', function() {
+    {% if messages %}
+        var mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+        mensajeModal.show();
+    {% endif %}
+});
+</script>
+
+{% endblock %}
+
+
+
