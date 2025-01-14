@@ -5,7 +5,7 @@ Repositorio para el equipo 2 THREADS
 
 ## Descripción
 
-Ciencias_Top es prototipo de plataforma diseñada para la gestión y administración de rentas de productos que ofrece la facultad de ciencias. Este proyecto permite a los administradores y usuarios gestionar de manera eficiente el alquiler de equipos y materiales, proporcionando una interfaz intuitiva y funcionalidades avanzadas para el seguimiento y control de las rentas.
+Ciencias_Top es  un prototipo de plataforma diseñada para la gestión y administración de rentas de productos que ofrece la facultad de ciencias. Este proyecto permite a los administradores y usuarios gestionar de manera eficiente el alquiler de equipos y materiales, proporcionando una interfaz intuitiva y funcionalidades avanzadas para el seguimiento y control de las rentas.
 
 ## Características
 
