@@ -1,7 +1,26 @@
 # THREADS-IS
 Repositorio para el equipo 2 THREADS
 
+# Ciencias_Top
 
+## Descripción
+
+Ciencias_Top es prototipo de plataforma diseñada para la gestión y administración de rentas de productos que ofrece la facultad de ciencias. Este proyecto permite a los administradores y usuarios gestionar de manera eficiente el alquiler de equipos y materiales, proporcionando una interfaz intuitiva y funcionalidades avanzadas para el seguimiento y control de las rentas.
+
+## Características
+
+Gestión de Usuarios: Permite la creación, edición y eliminación de usuarios con diferentes roles (administradores y usuarios regulares).
+Historial de Rentas: Los administradores pueden ver el historial de rentas de cualquier usuario, ordenado por fecha.
+Autenticación y Autorización: Implementa un sistema de autenticación para asegurar que solo los usuarios autorizados puedan acceder a ciertas funcionalidades.
+Interfaz Intuitiva: Una interfaz de usuario amigable que facilita la navegación y el uso de la plataforma.
+
+## Tecnologías Utilizadas
+
+Django: Framework web utilizado para el desarrollo del backend.
+HTML/CSS: Para la creación de la interfaz de usuario.
+JavaScript: Para mejorar la interactividad de la interfaz.
+PostgreSQL: Base de datos utilizada para almacenar la información de las rentas y usuarios.
+Docker: Para la contenedorización de la aplicación y la base de datos.
 
 ## Instrucciones para levantar el proyecto
 
